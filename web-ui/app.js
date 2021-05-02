@@ -1,27 +1,16 @@
-const {EmojiRequest, EmojiResponse} = require('./emoji_pb.js');
-const {EmojiServiceClient} = require('./emoji_grpc_web_pb.js');
+const { EmojiRequest, EmojiResponse } = require('./emoji_pb.js');
+const { EmojiServiceClient } = require('./emoji_grpc_web_pb.js');
 
-var client = new EmojiServiceClient('http://' + window.location.host);
-var editor = document.getElementById('editor');
+var client = new EmojiServiceClient('https://preprod-voucherkit.gonuclei.com');
 
-window.insertEmojis = function() {
-  var request = new EmojiRequest();
-  request.setInputText(editor.innerText);
+var request = new EmojiRequest();
+request.setInputText("Hi :D");
 
-  client.insertEmojis(request, {}, (err, response) => {
-    editor.innerText = response.getOutputText();
-    window.focusEditor();
-  });
-};
-
-window.focusEditor = function() {
-  editor.focus();
-  var range = document.createRange();
-  range.selectNodeContents(editor);
-  range.collapse(false);
-  var sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-};
-
-window.focusEditor();
+client.insertEmojis(request, {}, function (err, response) {
+  if (err != null) {
+    alert(err.name, err.message);
+    console.log("failed");
+  } else {
+    console.log(response.getMessage());
+  }
+});

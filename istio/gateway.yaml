@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: gateway
+  name: emoji-server-gateway
 spec:
   selector:
     istio: ingressgateway
@@ -11,7 +11,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - "preprod-emoji.com"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -19,16 +19,28 @@ metadata:
   name: virtual-service
 spec:
   hosts:
-  - "*"
+  - "preprod-emoji.com"
   gateways:
-  - gateway
+  - emoji-server-gateway
   http:
+  - match:
+    - uri:
+        prefix: /dist
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: emoji-web-ui
+        port:
+          number: 9001  
   - match:
     - uri:
         prefix: /proto.EmojiService
     route:
     - destination:
-        host: server
+        host: emoji-server
+        port:
+          number: 9000
     corsPolicy:
       allowOrigin:
         - "*"
@@ -57,6 +69,3 @@ spec:
         - grpc-status
         - grpc-message
       allowCredentials: true
-  - route:
-    - destination:
-        host: web-ui

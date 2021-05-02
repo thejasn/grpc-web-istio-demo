@@ -33,8 +33,12 @@ help:
 
 .PHONY: generate-go
 generate-go:
-	protoc -I proto/ proto/emoji.proto \
-	       --go_out=plugins=grpc:proto
+	# protoc -I proto/ proto/emoji.proto \
+	#        --go_out=plugins=grpc:proto --go-grpc_out=... 
+
+	protoc -I proto/ proto/emoji.proto --go_out=proto  \
+    --go-grpc_out=proto
+		   
 
 .PHONY: generate-js
 generate-js:
@@ -48,7 +52,7 @@ run-server:
 
 .PHONY: run-server-docker
 run-server-docker:
-	docker run --rm -p 9000:9000 vnoronha/grpc-web-istio-demo:server
+	docker run --rm -p 9000:9000 thejasn/grpc-web-istio-demo:latest
 
 .PHONY: run-client-local
 run-client-local:
@@ -60,11 +64,11 @@ run-client-istio:
 
 .PHONY: build-server
 build-server:
-	docker build -f docker/server.Dockerfile -t vnoronha/grpc-web-istio-demo:server .
+	docker build -f docker/server.Dockerfile -t thejasn/grpc-web-istio-demo-server:latest .
 
 .PHONY: build-web-ui
 build-web-ui:
-	docker build -f docker/web-ui.Dockerfile -t vnoronha/grpc-web-istio-demo:web-ui .
+	docker build -f docker/web-ui.Dockerfile -t thejasn/grpc-web-istio-demo-web-ui:latest .
 
 .PHONY: deploy-server
 deploy-server:

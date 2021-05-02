@@ -1,5 +1,4 @@
 FROM node:8.15 as builder
-MAINTAINER Venil Noronha <veniln@vmware.com>
 
 WORKDIR /web-ui/
 COPY web-ui/ .

@@ -8,13 +8,15 @@ import (
 	"log"
 	"net"
 
-	"github.com/venilnoronha/grpc-web-istio-demo/proto"
+	"github.com/thejasn/grpc-web-istio-demo/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	emoji "gopkg.in/kyokomi/emoji.v1"
 )
 
-type server struct{}
+type server struct {
+	proto.UnimplementedEmojiServiceServer
+}
 
 func (s *server) InsertEmojis(ctx context.Context, req *proto.EmojiRequest) (*proto.EmojiResponse, error) {
 	log.Printf("Client says: %s", req.InputText)
